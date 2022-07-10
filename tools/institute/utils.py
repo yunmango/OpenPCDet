@@ -35,4 +35,82 @@ def results_to_json(json_file, pred_labels, pred_scores, pred_boxes):
 
         annos_list.append(annos) 
 
-    json.dump(annos_list, open(json_file, "w"), indent=4) 
+    json.dump(annos_list, open(json_file, "w"), indent=4)
+
+
+def getCorners(xyz_lwh_y):
+    c_x = xyz_lwh_y[0]    # center x
+    c_y = xyz_lwh_y[1]
+    c_z = xyz_lwh_y[2]
+    L = xyz_lwh_y[3]        # length
+    W = xyz_lwh_y[4]
+    H = xyz_lwh_y[5]
+    yaw = xyz_lwh_y[6]
+
+    points = []
+    # 0
+    points.append(
+        [
+            c_x - 0.5*W*np.sin(yaw) + 0.5*L*np.cos(yaw),     # x
+            c_y + 0.5*W*np.cos(yaw) + 0.5*L*np.sin(yaw),      # y
+            c_z + 0.5*H              # z
+        ]
+    ) 
+    # 1
+    points.append(
+        [
+            c_x - 0.5*W*np.sin(yaw) - 0.5*L*np.cos(yaw),     # x
+            c_y + 0.5*W*np.cos(yaw) - 0.5*L*np.sin(yaw),      # y
+            c_z + 0.5*H              # z
+        ]
+    ) 
+    # 2
+    points.append(
+        [
+            c_x + 0.5*W*np.sin(yaw) - 0.5*L*np.cos(yaw),     # x
+            c_y - 0.5*W*np.cos(yaw) - 0.5*L*np.sin(yaw),      # y
+            c_z + 0.5*H              # z
+        ]
+    ) 
+    # 3
+    points.append(
+        [
+            c_x + 0.5*W*np.sin(yaw) + 0.5*L*np.cos(yaw),     # x
+            c_y - 0.5*W*np.cos(yaw) + 0.5*L*np.sin(yaw),      # y
+            c_z + 0.5*H              # z
+        ]
+    ) 
+    # 4
+    points.append(
+        [
+            c_x - 0.5*W*np.sin(yaw) + 0.5*L*np.cos(yaw),     # x
+            c_y + 0.5*W*np.cos(yaw) + 0.5*L*np.sin(yaw),      # y
+            c_z - 0.5*H              # z
+        ]
+    ) 
+    # 5
+    points.append(
+        [
+            c_x - 0.5*W*np.sin(yaw) - 0.5*L*np.cos(yaw),     # x
+            c_y + 0.5*W*np.cos(yaw) - 0.5*L*np.sin(yaw),      # y
+            c_z - 0.5*H              # z
+        ]
+    ) 
+    # 6
+    points.append(
+        [
+            c_x + 0.5*W*np.sin(yaw) - 0.5*L*np.cos(yaw),     # x
+            c_y - 0.5*W*np.cos(yaw) - 0.5*L*np.sin(yaw),      # y
+            c_z - 0.5*H              # z
+        ]
+    ) 
+    # 7
+    points.append(
+        [
+            c_x + 0.5*W*np.sin(yaw) + 0.5*L*np.cos(yaw),     # x
+            c_y - 0.5*W*np.cos(yaw) + 0.5*L*np.sin(yaw),      # y
+            c_z - 0.5*H              # z
+        ]
+    )
+
+    return np.asarray(points)
